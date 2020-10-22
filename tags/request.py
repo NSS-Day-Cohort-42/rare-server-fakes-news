@@ -43,17 +43,17 @@ def create_tag(new_tag):
 
         db_cursor.execute("""
         INSERT INTO Tag
-            (  tag )
+            ( tag )
         VALUES
             ( ? );
-        """, (new_tag['tag'],))
+        """, ((new_tag['tag']),))
 
         # The `lastrowid` property on the cursor will return
         # the primary key of the last thing that got added to
         # the database.
         id = db_cursor.lastrowid
 
-        # Add the `id` property to the animal dictionary that
+        # Add the `id` property to the tag dictionary that
         # was sent by the client so that the client sees the
         # primary key in the response.
         new_tag['id'] = id
