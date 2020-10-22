@@ -1,7 +1,7 @@
 import sqlite3
 import json
 import subscriptions
-from models import Subscription
+# from models import Subscription
 
 
 def get_subscriptions():

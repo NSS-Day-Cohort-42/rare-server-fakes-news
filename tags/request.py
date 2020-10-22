@@ -45,9 +45,8 @@ def create_tag(new_tag):
         INSERT INTO Tag
             (  tag )
         VALUES
-            ( ?);
-        """, (new_tag['tag']
-               ))
+            ( ? );
+        """, (new_tag['tag'],))
 
         # The `lastrowid` property on the cursor will return
         # the primary key of the last thing that got added to
