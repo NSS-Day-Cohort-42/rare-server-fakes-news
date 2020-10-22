@@ -128,11 +128,11 @@ def create_post(new_post):
 
         db_cursor.execute("""
         INSERT INTO Post
-            ( title, content, category_id, datetime, user_id, approved )
+            ( title, content, category_id, date, user_id, approved )
         VALUES
             ( ?, ?, ?, ?, ?, ?);
         """, (new_post['title'], new_post['content'],
-              new_post['category_id'], new_post['datetime'], new_post['user_id'], new_post['approved']))
+              new_post['category_id'], new_post['date'], new_post['user_id'], new_post['approved']))
 
         # The `lastrowid` property on the cursor will return
         # the primary key of the last thing that got added to
