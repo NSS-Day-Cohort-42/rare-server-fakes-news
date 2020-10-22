@@ -2,6 +2,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from models import Category, Post, Reaction, Tag, User
 from users import get_user_by_email, create_user, get_all_users
+from posts import get_all_posts
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -62,6 +63,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "users" and id is None:
                 response = get_all_users()
+            if resource == "posts" and id is None:
+                response = get_all_posts()
         
         elif len(parsed) == 3:
             ( resource, key, value ) = parsed
