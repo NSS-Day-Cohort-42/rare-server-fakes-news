@@ -7,6 +7,8 @@ from subscriptions import get_subscriptions, create_subscription
 from tags import get_tags, create_tag
 from models import Category, Post, Reaction, Tag, User
 from users import get_user_by_email, create_user, get_all_users
+from tags import get_tags, create_tag
+
 
 
 # This function is not inside the class. It is the starting
@@ -60,8 +62,10 @@ class HandleRequests(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-        self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept')
+        self.send_header('Access-Control-Allow-Methods',
+                         'GET, POST, PUT, DELETE')
+        self.send_header('Access-Control-Allow-Headers',
+                         'X-Requested-With, Content-Type, Accept')
         self.end_headers()
     
     def do_GET(self):
@@ -79,6 +83,9 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "categories":
                     response = f"{get_categories()}"
+            if resource == "tags":            
+                response = f"{get_tags()}"
+     
         
         elif len(parsed) == 3:
             ( resource, key, value ) = parsed
@@ -106,5 +113,21 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "categories":
             new_resource = create_category(post_body)
 
+        if resource == "tags":
+            new_resource = create_tag(post_body)
+
+
         # Encode the new animal and send in response
         self.wfile.write(f"{new_resource}".encode())
+
+    
+
+
+# def main():
+#     host = ''
+#     port = 8088
+#     HTTPServer((host, port), HandleRequests).serve_forever()
+
+
+# if __name__ == "__main__":
+#     main()
