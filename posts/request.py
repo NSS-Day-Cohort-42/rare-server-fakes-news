@@ -63,7 +63,7 @@ def get_single_post(id):
             p.title,
             p.content,
             p.category_id,
-            p.datetime,
+            p.date,
             p.user_id,
             p.approved
         FROM post p
@@ -95,7 +95,7 @@ def get_posts_by_user_id(user_id):
             p.title,
             p.content,
             p.category_id,
-            p.datetime,
+            p.date,
             p.user_id,
             p.approved
           
