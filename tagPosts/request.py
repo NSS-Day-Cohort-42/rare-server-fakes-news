@@ -47,17 +47,10 @@ def create_tagPost(new_tagPost):
             (  tag_id, post_id )
         VALUES
             ( ?, ?);
-        """, (new_tagPost['tag_id'], new_tagPost['post_id']
-               ))
+        """, (new_tagPost['tag_id'], new_tagPost['post_id'], ))
 
-        # The `lastrowid` property on the cursor will return
-        # the primary key of the last thing that got added to
-        # the database.
         id = db_cursor.lastrowid
 
-        # Add the `id` property to the animal dictionary that
-        # was sent by the client so that the client sees the
-        # primary key in the response.
         new_tagPost['id'] = id
 
 

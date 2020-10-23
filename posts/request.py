@@ -1,6 +1,7 @@
+from models.category import Category
 import sqlite3
 import json
-from models import Post
+from models import Post, User
 
 def get_all_posts():
     with sqlite3.connect("./rare.db") as conn:
@@ -15,29 +16,36 @@ def get_all_posts():
            p.title,
            p.content,
            p.category_id,
-           p.datetime,
+           p.date,
            p.user_id,
-           p.approved
-        FROM post p
+           p.approved,
+           c.type,
+           u.display_name
+        FROM Post p
+        JOIN Category c ON c.id = p.category_id
+        JOIN User u ON u.id = p.user_id
         """)
 
         # Initialize an empty list to hold all post representations
         posts = []
 
-        # Convert rows of data into a Python list
         dataset = db_cursor.fetchall()
 
-        # Iterate list of data returned from database
         for row in dataset:
 
-            # Create a post instance from the current row.
-            # Note that the database fields are specified in
-            # exact order of the parameters defined in the
-            # Post class above.
-            post = Post(row['id'], row['title'], row['content'], row['category_id'], row['datetime'], row['user_id'], row['approved'])
+            post = Post(row['id'], row['title'], row['content'], row['category_id'], row['date'], row['user_id'], row['approved'])
+
+            user = User("", "", row['display_name'], "", "", "", "")
+            
+
+            category = Category("", row['type'])
+
+            post.user = user.__dict__
+            post.category = category.__dict__
+
             posts.append(post.__dict__)
 
-    # Use `json` package to properly serialize list as JSON
+
     return json.dumps(posts)
 
 
@@ -55,7 +63,7 @@ def get_single_post(id):
             p.title,
             p.content,
             p.category_id,
-            p.datetime,
+            p.date,
             p.user_id,
             p.approved
         FROM post p
@@ -87,7 +95,7 @@ def get_posts_by_user_id(user_id):
             p.title,
             p.content,
             p.category_id,
-            p.datetime,
+            p.date,
             p.user_id,
             p.approved
           
@@ -120,20 +128,14 @@ def create_post(new_post):
 
         db_cursor.execute("""
         INSERT INTO Post
-            ( title, content, category_id, datetime, user_id, approved )
+            ( title, content, category_id, date, user_id, approved )
         VALUES
             ( ?, ?, ?, ?, ?, ?);
         """, (new_post['title'], new_post['content'],
-              new_post['category_id'], new_post['datetime'], new_post['user_id'], new_post['approved']))
+              new_post['category_id'], new_post['date'], new_post['user_id'], new_post['approved'], ))
 
-        # The `lastrowid` property on the cursor will return
-        # the primary key of the last thing that got added to
-        # the database.
         id = db_cursor.lastrowid
 
-        # Add the `id` property to the animal dictionary that
-        # was sent by the client so that the client sees the
-        # primary key in the response.
         new_post['id'] = id
 
 
