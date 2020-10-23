@@ -69,15 +69,14 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "users" and id is None:
                 response = get_all_users()
+            if resource == "tags":            
+                response = f"{get_tags()}"
             if resource == "posts" and id is None:
                 response = get_all_posts()
             if resource == "categories" and id is None:
                 response = get_categories()
             if resource == "tagPosts" and id is None:
                 response = get_tagPosts()
-
-            if resource == "tags":            
-                response = f"{get_tags()}"
      
         
         elif len(parsed) == 3:
@@ -102,13 +101,13 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Add a new items to the list.
         if resource == "users":
             new_resource = create_user(post_body)
+        if resource == "tags":
+            new_resource = create_tag(post_body)
         if resource == "posts":
             new_resource = create_post(post_body)
         if resource == "tagPosts":
             new_resource = create_tagPost(post_body)
 
-        if resource == "tags":
-            new_resource = create_tag(post_body)
 
 
         # Encode the new animal and send in response

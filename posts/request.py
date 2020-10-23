@@ -132,16 +132,10 @@ def create_post(new_post):
         VALUES
             ( ?, ?, ?, ?, ?, ?);
         """, (new_post['title'], new_post['content'],
-              new_post['category_id'], new_post['date'], new_post['user_id'], new_post['approved']))
+              new_post['category_id'], new_post['date'], new_post['user_id'], new_post['approved'], ))
 
-        # The `lastrowid` property on the cursor will return
-        # the primary key of the last thing that got added to
-        # the database.
         id = db_cursor.lastrowid
 
-        # Add the `id` property to the animal dictionary that
-        # was sent by the client so that the client sees the
-        # primary key in the response.
         new_post['id'] = id
 
 
