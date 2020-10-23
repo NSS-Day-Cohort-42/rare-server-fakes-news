@@ -1,11 +1,12 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from tagPosts import create_tagPost, get_tagPosts
-from posts import create_post
+from posts import create_post, get_all_posts
 from models import Category, Post, Reaction, Tag, User
 from users import get_user_by_email, create_user, get_all_users
-from posts import get_all_posts
 from categories import get_categories
+from tags import get_tags, create_tag
+
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -50,8 +51,10 @@ class HandleRequests(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-        self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept')
+        self.send_header('Access-Control-Allow-Methods',
+                         'GET, POST, PUT, DELETE')
+        self.send_header('Access-Control-Allow-Headers',
+                         'X-Requested-With, Content-Type, Accept')
         self.end_headers()
     
     def do_GET(self):
@@ -72,6 +75,10 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_categories()
             if resource == "tagPosts" and id is None:
                 response = get_tagPosts()
+
+            if resource == "tags":            
+                response = f"{get_tags()}"
+     
         
         elif len(parsed) == 3:
             ( resource, key, value ) = parsed
@@ -100,17 +107,21 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "tagPosts":
             new_resource = create_tagPost(post_body)
 
+        if resource == "tags":
+            new_resource = create_tag(post_body)
+
 
         # Encode the new animal and send in response
         self.wfile.write(f"{new_resource}".encode())
 
+    
 
-# This function is not inside the class. It is the starting
-# point of this application.
+
 def main():
     host = ''
     port = 8088
     HTTPServer((host, port), HandleRequests).serve_forever()
+
 
 if __name__ == "__main__":
     main()
