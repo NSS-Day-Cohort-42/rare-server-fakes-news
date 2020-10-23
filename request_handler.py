@@ -1,5 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from reactions.request import create_reaction, get_reactions
 from models import Category, Post, Reaction, Tag, User
 from users import get_user_by_email, create_user, get_all_users
 from tags import get_tags, create_tag
@@ -69,6 +70,9 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "tags":            
                 response = f"{get_tags()}"
+
+            if resource == "reactions":
+                response = f"{get_reactions()}"
      
         
         elif len(parsed) == 3:
@@ -96,6 +100,9 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "tags":
             new_resource = create_tag(post_body)
+
+        if resource == "reactions":
+            new_resource = create_reaction(post_body)
 
 
         # Encode the new animal and send in response
