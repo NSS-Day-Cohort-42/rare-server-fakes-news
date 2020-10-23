@@ -13,8 +13,8 @@ def get_categories():
         db_cursor.execute("""
         SELECT
            c.id,
-           c.type,
-        FROM category c
+           c.type
+        FROM Category c
         """)
 
         # Initialize an empty list to hold all category representations
@@ -46,7 +46,7 @@ def create_category(new_category):
             (  type )
         VALUES
             ( ? );
-        """, (new_category['type']
+        """, (new_category['type'],
                ))
 
         # The `lastrowid` property on the cursor will return
