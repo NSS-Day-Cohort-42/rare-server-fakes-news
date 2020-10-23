@@ -13,7 +13,7 @@ def get_categories():
         db_cursor.execute("""
         SELECT
            c.id,
-           c.type,
+           c.type
         FROM category c
         """)
 

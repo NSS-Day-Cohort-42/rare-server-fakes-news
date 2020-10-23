@@ -1,6 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from posts.request import create_post
+from tagPosts import create_tagPost, get_tagPosts
+from posts import create_post
 from models import Category, Post, Reaction, Tag, User
 from users import get_user_by_email, create_user, get_all_users
 from posts import get_all_posts
@@ -69,6 +70,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_all_posts()
             if resource == "categories" and id is None:
                 response = get_categories()
+            if resource == "tagPosts" and id is None:
+                response = get_tagPosts()
         
         elif len(parsed) == 3:
             ( resource, key, value ) = parsed
@@ -94,6 +97,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_resource = create_user(post_body)
         if resource == "posts":
             new_resource = create_post(post_body)
+        if resource == "tagPosts":
+            new_resource = create_tagPost(post_body)
 
 
         # Encode the new animal and send in response
