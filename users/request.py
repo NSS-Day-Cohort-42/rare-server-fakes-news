@@ -3,7 +3,7 @@ import json
 from models import User
 
 
-def get_users():
+def get_all_users():
     with sqlite3.connect("./rare.db") as conn:
 
         conn.row_factory = sqlite3.Row
@@ -41,6 +41,33 @@ def get_users():
     # Use `json` package to properly serialize list as JSON
     return json.dumps(users)
 
+
+def get_user_by_email(email):
+
+    with sqlite3.connect("rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        select
+            u.id,
+            u.avatar,
+            u.display_name,
+            u.password,
+            u.email,
+            u.creation,
+            u.active
+        from User u
+        WHERE u.email = ?
+        """, ( email, ))
+
+        data = db_cursor.fetchone()
+
+        user = User(data['id'], data['avatar'], data['display_name'], 
+                    data['password'], data['email'], data['creation'],data['active'])
+
+        # Return the JSON serialized user object
+        return json.dumps(user.__dict__)
 
 def create_user(new_user):
     with sqlite3.connect("./rare.db") as conn:
