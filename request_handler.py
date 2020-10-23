@@ -2,12 +2,25 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from tagPosts import create_tagPost, get_tagPosts
 from posts import create_post, get_all_posts
+from categories import get_categories, create_category
+from reactions import get_reactions, get_reactions_by_post_id, create_reaction
+from subscriptions import get_subscriptions, create_subscription
+from tags import get_tags, create_tag
 from models import Category, Post, Reaction, Tag, User
 from users import get_user_by_email, create_user, get_all_users
 from categories import get_categories
 from tags import get_tags, create_tag
 
 
+
+# This function is not inside the class. It is the starting
+# point of this application.
+def main():
+        host = ''
+        port = 8088
+        HTTPServer((host, port), HandleRequests).serve_forever()
+        if __name__ == "__main__":
+            main()
 
 class HandleRequests(BaseHTTPRequestHandler):
 
@@ -69,12 +82,12 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "users" and id is None:
                 response = get_all_users()
+            if resource == "categories" and id is None:
+                    response = f"{get_categories()}"
             if resource == "tags":            
                 response = f"{get_tags()}"
             if resource == "posts" and id is None:
                 response = get_all_posts()
-            if resource == "categories" and id is None:
-                response = get_categories()
             if resource == "tagPosts" and id is None:
                 response = get_tagPosts()
      
@@ -101,6 +114,9 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Add a new items to the list.
         if resource == "users":
             new_resource = create_user(post_body)
+
+        if resource == "categories":
+            new_resource = create_category(post_body)
         if resource == "tags":
             new_resource = create_tag(post_body)
         if resource == "posts":
@@ -116,11 +132,11 @@ class HandleRequests(BaseHTTPRequestHandler):
     
 
 
-def main():
-    host = ''
-    port = 8088
-    HTTPServer((host, port), HandleRequests).serve_forever()
+# def main():
+#     host = ''
+#     port = 8088
+#     HTTPServer((host, port), HandleRequests).serve_forever()
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
