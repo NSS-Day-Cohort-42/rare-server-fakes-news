@@ -84,26 +84,17 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "users" and id is None:
                 response = get_all_users()
-
             if resource == "categories" and id is None:
-<<<<<<< HEAD
                 response = get_categories()
-=======
-                    response = f"{get_categories()}"
-
->>>>>>> main
             if resource == "tags":            
                 response = f"{get_tags()}"
-
             if resource == "reactions":
                 response = f"{get_reactions()}"
-
             if resource == "posts":
                 if id is not None:
                     response = f"{get_single_post(id)}"
                 else:
                     response = get_all_posts()
-
             if resource == "tagPosts" and id is None:
                 response = get_tagPosts()
      
