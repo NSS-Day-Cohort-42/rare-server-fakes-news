@@ -1,17 +1,14 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from posts.request import get_single_post
-from reactions.request import create_reaction, get_reactions
 from tagPosts import create_tagPost, get_tagPosts
-from posts import create_post, get_all_posts
+from posts import create_post, get_all_posts, get_single_post
 from categories import get_categories, create_category
 from reactions import get_reactions, get_reactions_by_post_id, create_reaction
 from subscriptions import get_subscriptions, create_subscription
 from tags import get_tags, create_tag
-from models import Category, Post, Reaction, Tag, User
-from users import get_user_by_email, create_user, get_all_users
-from categories import get_categories
-from tags import get_tags, create_tag
+from users import get_user_by_email, create_user, get_all_users, get_single_user
+
+
 
 
 
@@ -82,21 +79,24 @@ class HandleRequests(BaseHTTPRequestHandler):
         if len(parsed) == 2:
             ( resource, id ) = parsed
 
-            if resource == "users" and id is None:
-                response = get_all_users()
             if resource == "categories" and id is None:
                 response = get_categories()
             if resource == "tags":            
                 response = f"{get_tags()}"
             if resource == "reactions":
                 response = f"{get_reactions()}"
-            if resource == "posts":
-                if id is not None:
-                    response = f"{get_single_post(id)}"
-                else:
-                    response = get_all_posts()
             if resource == "tagPosts" and id is None:
                 response = get_tagPosts()
+            if resource == "posts":
+                if id is not None:
+                    response = get_single_post(id)
+                else:
+                    response = get_all_posts()
+            if resource == "users":
+                if id is not None:
+                    response = get_single_user(id)
+                else:
+                    response = get_all_users()
      
         
         elif len(parsed) == 3:
@@ -130,8 +130,6 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_resource = create_post(post_body)
         if resource == "tagPosts":
             new_resource = create_tagPost(post_body)
-
-
         if resource == "reactions":
             new_resource = create_reaction(post_body)
 
