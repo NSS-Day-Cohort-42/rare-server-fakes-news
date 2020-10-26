@@ -106,6 +106,7 @@ def get_posts_by_user_id(user_id):
             p.approved
           
         WHERE p.user_id = ?
+
         """, ( user_id, ))
 
         posts = []
@@ -124,7 +125,49 @@ def get_posts_by_user_id(user_id):
 
 # # get_posts_by_tag_id
 
-# # get_posts_by_category_id
+def get_posts_by_category_id(category_id):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            p.id,
+            p.title,
+            p.content,
+            p.category_id,
+            p.date,
+            p.user_id,
+            p.approved,
+            c.type,
+            u.display_name
+        FROM POST p
+        JOIN Category c ON c.id = p.category_id
+        JOIN User u ON u.id = p.user_id
+        WHERE p.category_id = ?
+        """, ( category_id, ))
+
+        posts = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+
+            # Create an post instance from the current row
+            post = Post(row['id'], row['title'], row['content'], row['category_id'], row['date'], row['user_id'], row['approved'])
+            
+            user = User("", "", "", "", row['display_name'], "", "", "", "")
+            
+            category = Category("", row['type'])
+
+            post.user = user.__dict__
+            post.category = category.__dict__
+            
+            posts.append(post.__dict__)
+            
+
+        # Return the JSON serialized Customer object
+        return json.dumps(posts)
 
 # # get_posts_by_subscription
 
@@ -148,14 +191,14 @@ def create_post(new_post):
     return json.dumps(new_post)
 
 
-# def delete_post(id):
-#     with sqlite3.connect("./rare.db") as conn:
-#         db_cursor = conn.cursor()
+def delete_post(id):
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
 
-#         db_cursor.execute("""
-#         DELETE FROM post
-#         WHERE id = ?
-#         """, (id, ))
+        db_cursor.execute("""
+        DELETE FROM post
+        WHERE id = ?
+        """, (id, ))
 
 # def edit_post(id, new_post):
 #     with sqlite3.connect("./rare.db") as conn:
