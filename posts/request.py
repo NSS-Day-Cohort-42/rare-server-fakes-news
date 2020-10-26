@@ -65,16 +65,22 @@ def get_single_post(id):
             p.category_id,
             p.date,
             p.user_id,
-            p.approved
+            p.approved,
+            u.display_name
         FROM post p
+        JOIN User u ON u.id = p.user_id
+        WHERE p.id = ?
             """, ( id, ))
 
         # Load the single result into memory
         data = db_cursor.fetchone()
 
         # Create an post instance from the current row
-        post = Post(data['id'], data['title'], data['content'], data['category_id'], data['datetime'], data['user_id'], data['approved'])
+        post = Post(data['id'], data['title'], data['content'], data['category_id'], data['date'], data['user_id'], data['approved'])
        
+        user = User("", "", "", "", data['display_name'], "", "", "", "")
+
+        post.user = user.__dict__
         # add joins later
         # location = Location("", "", data['location_name'])
         # animal.location = location.__dict__
@@ -109,7 +115,7 @@ def get_posts_by_user_id(user_id):
         for row in dataset:
 
             # Create an post instance from the current row
-            post = Post(row['id'], row['title'], row['content'], row['category_id'], row['datetime'], row['user_id'], row['approved'])
+            post = Post(row['id'], row['title'], row['content'], row['category_id'], row['date'], row['user_id'], row['approved'])
             posts.append(post.__dict__)
             
 

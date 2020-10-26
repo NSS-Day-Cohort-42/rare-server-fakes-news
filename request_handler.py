@@ -1,5 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from posts.request import get_single_post
+from reactions.request import create_reaction, get_reactions
 from tagPosts import create_tagPost, get_tagPosts
 from posts import create_post, get_all_posts
 from categories import get_categories, create_category
@@ -82,12 +84,26 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "users" and id is None:
                 response = get_all_users()
+
             if resource == "categories" and id is None:
+<<<<<<< HEAD
                 response = get_categories()
+=======
+                    response = f"{get_categories()}"
+
+>>>>>>> main
             if resource == "tags":            
-                response = get_tags()
-            if resource == "posts" and id is None:
-                response = get_all_posts()
+                response = f"{get_tags()}"
+
+            if resource == "reactions":
+                response = f"{get_reactions()}"
+
+            if resource == "posts":
+                if id is not None:
+                    response = f"{get_single_post(id)}"
+                else:
+                    response = get_all_posts()
+
             if resource == "tagPosts" and id is None:
                 response = get_tagPosts()
      
@@ -124,6 +140,9 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "tagPosts":
             new_resource = create_tagPost(post_body)
 
+
+        if resource == "reactions":
+            new_resource = create_reaction(post_body)
 
 
         # Encode the new animal and send in response
