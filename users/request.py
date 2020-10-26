@@ -12,13 +12,15 @@ def get_all_users():
         # Write the SQL query to get the information you want
         db_cursor.execute("""
         SELECT
-           u.id,
-           u.first_name, 
-           u.last_name,
-           u.display_name,
-           u.email,
-           u.password,
-           u.avatar
+            u.id,
+            u.first_name, 
+            u.last_name,
+            u.display_name,
+            u.email,
+            u.password,
+            u.avatar,
+            u.creation,
+            u.active
         FROM User u
         """)
 
@@ -35,7 +37,8 @@ def get_all_users():
             # Note that the database fields are specified in
             # exact order of the parameters defined in the
             # Post class above.
-            user = User(row['id'], row['first_name'], row['last_name'], row['display_name'], row['email'], row['password'], row['avatar'])
+            user = User(row['id'], row['avatar'], row['first_name'], row['last_name'], row['display_name'], 
+                        row['password'], row['email'], row['creation'], row['active'])
             users.append(user.__dict__)
 
     # Use `json` package to properly serialize list as JSON
@@ -51,10 +54,12 @@ def get_user_by_email(email):
         db_cursor.execute("""
         select
             u.id,
-            u.avatar,
+            u.first_name, 
+            u.last_name,
             u.display_name,
-            u.password,
             u.email,
+            u.password,
+            u.avatar,
             u.creation,
             u.active
         from User u
@@ -63,7 +68,7 @@ def get_user_by_email(email):
 
         data = db_cursor.fetchone()
 
-        user = User(data['id'], data['avatar'], data['display_name'], 
+        user = User(data['id'], data['avatar'], data['first_name'], data['last_name'], data['display_name'], 
                     data['password'], data['email'], data['creation'],data['active'])
 
         # Return the JSON serialized user object
@@ -75,11 +80,11 @@ def create_user(new_user):
 
         db_cursor.execute("""
         INSERT INTO User
-            (  user )
+            ( avatar, first_name, last_name, display_name, password, email, creation, active )
         VALUES
-            ( ?);
-        """, (new_user['user']
-               ))
+            ( ?, ?, ?, ?, ?, ?, ?, ? );
+        """, (new_user['avatar'], new_user['first_name'], new_user['last_name'], new_user['display_name'], 
+                    new_user['password'], new_user['email'], new_user['creation'],new_user['active']))
 
         # The `lastrowid` property on the cursor will return
         # the primary key of the last thing that got added to
