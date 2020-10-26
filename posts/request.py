@@ -78,7 +78,7 @@ def get_single_post(id):
         # Create an post instance from the current row
         post = Post(data['id'], data['title'], data['content'], data['category_id'], data['date'], data['user_id'], data['approved'])
        
-        user = User("", "", "", "", data['display_name'], "", "", "", "")
+        user = User(data['id'], "", "", "", data['display_name'], "", "", "", "")
 
         post.user = user.__dict__
         # add joins later
