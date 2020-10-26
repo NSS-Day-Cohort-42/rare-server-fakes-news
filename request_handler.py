@@ -1,7 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from tagPosts import create_tagPost, get_tagPosts
-from posts import create_post, get_all_posts, delete_post
+from posts import create_post, get_all_posts, delete_post, get_posts_by_category_id
 from categories import get_categories, create_category
 from reactions import get_reactions, get_reactions_by_post_id, create_reaction
 from subscriptions import get_subscriptions, create_subscription
@@ -97,6 +97,9 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if key == "email" and resource == "users":
                 response = get_user_by_email(value)
+        
+            if key == "post" and resource == "category_id":
+                response = get_posts_by_category_id(value)
         
         self.wfile.write(response.encode())
     
