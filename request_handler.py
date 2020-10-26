@@ -17,12 +17,6 @@ from tags import get_tags, create_tag
 
 # This function is not inside the class. It is the starting
 # point of this application.
-def main():
-        host = ''
-        port = 8088
-        HTTPServer((host, port), HandleRequests).serve_forever()
-        if __name__ == "__main__":
-            main()
 
 class HandleRequests(BaseHTTPRequestHandler):
 
@@ -87,15 +81,16 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "categories" and id is None:
                 response = get_categories()
+
             if resource == "tags":            
-                response = f"{get_tags()}"
+                response = get_tags()
 
             if resource == "reactions":
-                response = f"{get_reactions()}"
+                response = get_reactions()
 
             if resource == "posts":
                 if id is not None:
-                    response = f"{get_single_post(id)}"
+                    response = get_single_post(id)
                 else:
                     response = get_all_posts()
 
@@ -109,7 +104,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             if key == "email" and resource == "users":
                 response = get_user_by_email(value)
         
-            if key == "post" and resource == "category_id":
+            if key == "category_id" and resource == "posts":
                 response = get_posts_by_category_id(value)
         
         self.wfile.write(response.encode())
@@ -128,7 +123,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Add a new items to the list.
         if resource == "users":
             new_resource = create_user(post_body)
-
         if resource == "categories":
             new_resource = create_category(post_body)
         if resource == "tags":
@@ -137,8 +131,6 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_resource = create_post(post_body)
         if resource == "tagPosts":
             new_resource = create_tagPost(post_body)
-
-
         if resource == "reactions":
             new_resource = create_reaction(post_body)
 
@@ -161,12 +153,12 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Encode the new animal and send in response
         self.wfile.write("".encode())    
 
+def main():
+    host = ''
+    port = 8088
+    HTTPServer((host, port), HandleRequests).serve_forever()
 
-# def main():
-#     host = ''
-#     port = 8088
-#     HTTPServer((host, port), HandleRequests).serve_forever()
 
+if __name__ == "__main__":
+    main()
 
-# if __name__ == "__main__":
-#     main()
