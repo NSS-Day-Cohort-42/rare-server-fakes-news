@@ -35,7 +35,7 @@ def get_all_posts():
 
             post = Post(row['id'], row['title'], row['content'], row['category_id'], row['date'], row['user_id'], row['approved'])
 
-            user = User("", "", row['display_name'], "", "", "", "")
+            user = User("", "", "", "", row['display_name'], "", "", "", "")
             
 
             category = Category("", row['type'])
