@@ -83,7 +83,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             if resource == "users" and id is None:
                 response = get_all_users()
             if resource == "categories" and id is None:
-                    response = get_categories()
+                response = get_categories()
             if resource == "tags":            
                 response = get_tags()
             if resource == "posts" and id is None:
