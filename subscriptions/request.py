@@ -29,7 +29,6 @@ def get_subscriptions():
                                         row['begin'], row['end'])
             subscriptions.append(subscription.__dict__)
 
-    # Use `json` package to properly serialize list as JSON
     return json.dumps(subscriptions)
 
 

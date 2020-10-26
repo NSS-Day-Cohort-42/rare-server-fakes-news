@@ -82,11 +82,13 @@ class HandleRequests(BaseHTTPRequestHandler):
             if resource == "categories" and id is None:
                 response = get_categories()
             if resource == "tags":            
-                response = f"{get_tags()}"
+                response = get_tags()
             if resource == "reactions":
-                response = f"{get_reactions()}"
+                response = get_reactions()
             if resource == "tagPosts" and id is None:
                 response = get_tagPosts()
+            if resource == "subscriptions" and id is None:
+                response = get_subscriptions()
             if resource == "posts":
                 if id is not None:
                     response = get_single_post(id)
@@ -121,7 +123,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Add a new items to the list.
         if resource == "users":
             new_resource = create_user(post_body)
-
         if resource == "categories":
             new_resource = create_category(post_body)
         if resource == "tags":
