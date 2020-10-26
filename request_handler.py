@@ -83,9 +83,9 @@ class HandleRequests(BaseHTTPRequestHandler):
             if resource == "users" and id is None:
                 response = get_all_users()
             if resource == "categories" and id is None:
-                    response = f"{get_categories()}"
+                response = get_categories()
             if resource == "tags":            
-                response = f"{get_tags()}"
+                response = get_tags()
             if resource == "posts" and id is None:
                 response = get_all_posts()
             if resource == "tagPosts" and id is None:
@@ -137,7 +137,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         (resource, id) = self.parse_url(self.path)
 
         # Delete a single animal from the list
-        if resource == "post":
+        if resource == "Posts":
             delete_post(id)
 
 
