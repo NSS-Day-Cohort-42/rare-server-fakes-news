@@ -12,6 +12,7 @@ from models import Category, Post, Reaction, Tag, User
 from users import get_user_by_email, create_user, get_all_users
 from categories import get_categories
 from tags import get_tags, create_tag
+from reactionPosts import create_reactionPost, get_reactionPosts
 
 
 
@@ -102,6 +103,9 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "tagPosts" and id is None:
                 response = get_tagPosts()
+
+            if resource == "reactionPosts" and id is None:
+                response = get_reactionPosts()
      
         
         elif len(parsed) == 3:
@@ -139,6 +143,9 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "reactions":
             new_resource = create_reaction(post_body)
+
+        if resource == "reactionPosts":
+            new_resource = create_reactionPost(post_body)
 
 
         # Encode the new animal and send in response
