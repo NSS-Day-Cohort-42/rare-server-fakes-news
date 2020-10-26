@@ -96,7 +96,6 @@ def get_posts_by_user_id(user_id):
             p.date,
             p.user_id,
             p.approved
-          
         WHERE p.user_id = ?
 
         """, ( user_id, ))
