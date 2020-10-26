@@ -1,7 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from tagPosts import create_tagPost, get_tagPosts
-from posts import create_post, get_all_posts, get_single_post
+from posts import create_post, get_all_posts, delete_post, get_posts_by_category_id, get_single_post
 from categories import get_categories, create_category
 from reactions import get_reactions, get_reactions_by_post_id, create_reaction
 from subscriptions import get_subscriptions, create_subscription
@@ -14,12 +14,6 @@ from users import get_user_by_email, create_user, get_all_users, get_single_user
 
 # This function is not inside the class. It is the starting
 # point of this application.
-def main():
-        host = ''
-        port = 8088
-        HTTPServer((host, port), HandleRequests).serve_forever()
-        if __name__ == "__main__":
-            main()
 
 class HandleRequests(BaseHTTPRequestHandler):
 
@@ -107,6 +101,9 @@ class HandleRequests(BaseHTTPRequestHandler):
             if key == "email" and resource == "users":
                 response = get_user_by_email(value)
         
+            if key == "category_id" and resource == "posts":
+                response = get_posts_by_category_id(value)
+        
         self.wfile.write(response.encode())
     
     def do_POST(self):
@@ -136,4 +133,28 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         # Encode the new animal and send in response
         self.wfile.write(f"{new_resource}".encode())
+
+    def do_DELETE(self):
+        # Set a 204 response code
+        self._set_headers(204)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        # Delete a single animal from the list
+        if resource == "Posts":
+            delete_post(id)
+
+
+        # Encode the new animal and send in response
+        self.wfile.write("".encode())    
+
+def main():
+    host = ''
+    port = 8088
+    HTTPServer((host, port), HandleRequests).serve_forever()
+
+
+if __name__ == "__main__":
+    main()
 
