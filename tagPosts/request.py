@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from models import TagPost
+from models import TagPost, Post 
 
 
 def get_tagPosts():
@@ -36,6 +36,32 @@ def get_tagPosts():
 
     # Use `json` package to properly serialize list as JSON
     return json.dumps(tagPosts)
+
+def get_tagPosts_by_tag_id(tag_id):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+           tp.id,
+           tp.tag_id,
+           tp.post_id
+           p.title 
+           p.content 
+        
+        WHERE tp.id = ?
+        """, ( id, ))
+
+        tagPostsByTagId = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            tagPost = TagPost(row['id'], row['tag_id'], row['post_id'], row['title'], row['content'])
+            tagPostsByTagId.append(tagPost.__dict__)
+
+    return json.dumps(tagPostsByTagId)
 
 
 def create_tagPost(new_tagPost):
