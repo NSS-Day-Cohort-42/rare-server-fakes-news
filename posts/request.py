@@ -138,7 +138,7 @@ def create_post(new_post):
         VALUES
             ( ?, ?, ?, ?, ?, ?);
         """, (new_post['title'], new_post['content'],
-              new_post['category_id'], new_post[DateTime.now()], new_post['user_id'], new_post['approved'], ))
+              new_post['category_id'], new_post['date'], new_post['user_id'], new_post['approved'], ))
 
         id = db_cursor.lastrowid
 
