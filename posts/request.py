@@ -142,14 +142,14 @@ def create_post(new_post):
     return json.dumps(new_post)
 
 
-# def delete_post(id):
-#     with sqlite3.connect("./rare.db") as conn:
-#         db_cursor = conn.cursor()
+def delete_post(id):
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
 
-#         db_cursor.execute("""
-#         DELETE FROM post
-#         WHERE id = ?
-#         """, (id, ))
+        db_cursor.execute("""
+        DELETE FROM post
+        WHERE id = ?
+        """, (id, ))
 
 # def edit_post(id, new_post):
 #     with sqlite3.connect("./rare.db") as conn:

@@ -1,7 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from tagPosts import create_tagPost, get_tagPosts
-from posts import create_post, get_all_posts
+from posts import create_post, get_all_posts, delete_post
 from categories import get_categories, create_category
 from reactions import get_reactions, get_reactions_by_post_id, create_reaction
 from subscriptions import get_subscriptions, create_subscription
@@ -129,7 +129,20 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Encode the new animal and send in response
         self.wfile.write(f"{new_resource}".encode())
 
-    
+    def do_DELETE(self):
+        # Set a 204 response code
+        self._set_headers(204)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        # Delete a single animal from the list
+        if resource == "post":
+            delete_post(id)
+
+
+        # Encode the new animal and send in response
+        self.wfile.write("".encode())    
 
 
 # def main():
