@@ -115,14 +115,8 @@ def create_user(new_user):
         """, (new_user['avatar'], new_user['first_name'], new_user['last_name'], new_user['display_name'], 
                     new_user['password'], new_user['email'], new_user['creation'],new_user['active']))
 
-        # The `lastrowid` property on the cursor will return
-        # the primary key of the last thing that got added to
-        # the database.
         id = db_cursor.lastrowid
 
-        # Add the `id` property to the animal dictionary that
-        # was sent by the client so that the client sees the
-        # primary key in the response.
         new_user['id'] = id
 
 
