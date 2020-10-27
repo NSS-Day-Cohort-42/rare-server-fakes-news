@@ -1,11 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from tagPosts import create_tagPost, get_tagPosts
-<<<<<<< HEAD
-from posts import create_post, get_all_posts, delete_post, get_posts_by_category_id, get_posts_by_user_id, get_single_post_tags
-=======
-from posts import create_post, get_all_posts, delete_post, get_posts_by_category_id, get_single_post, get_posts_by_user_id
->>>>>>> main
+from tagPosts import create_tagPost, get_tagPosts, delete_tag_post
+from posts import create_post, get_all_posts, delete_post, get_posts_by_category_id, get_posts_by_user_id, get_single_post_tags, get_single_post
 from categories import get_categories, create_category
 from reactions import get_reactions, get_reactions_by_post_id, create_reaction
 from subscriptions import get_subscriptions, create_subscription
@@ -154,6 +150,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Delete a single animal from the list
         if resource == "Posts":
             delete_post(id)
+        if resource == "TagPosts":
+            delete_tag_post(id)
 
 
         # Encode the new animal and send in response

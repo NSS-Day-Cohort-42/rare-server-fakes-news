@@ -55,3 +55,12 @@ def create_tagPost(new_tagPost):
 
 
     return json.dumps(new_tagPost)
+
+def delete_tag_post(tagPost_id):
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM TagPost
+        WHERE id = ?
+        """, (tagPost_id, ))

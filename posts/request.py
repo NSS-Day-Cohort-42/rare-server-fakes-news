@@ -1,7 +1,8 @@
+from sqlite3.dbapi2 import Row
 from models.category import Category
 import sqlite3
 import json
-from models import Post, User, Tag
+from models import Post, User, Tag, TagPost
 
 def get_all_posts():
     with sqlite3.connect("./rare.db") as conn:
@@ -97,7 +98,9 @@ def get_single_post_tags(id):
         # into the SQL statement.
         db_cursor.execute("""
         SELECT
-            t.tag
+            t.id,
+            t.tag,
+            tp.id
         FROM TagPost tp
         JOIN Tag t on t.id = tp.tag_id 
         JOIN post p on p.id = tp.post_id
@@ -112,7 +115,10 @@ def get_single_post_tags(id):
 
         for row in dataset:
             # Create an post instance from the current row
-            tag = Tag("", row['tag'])
+            tag = Tag(row['id'], row['tag'])
+            tagPost = TagPost(row['id'], "", "")
+            tag.tagPost = tagPost.__dict__
+            
             tags.append(tag.__dict__)
 
         return json.dumps(tags)
