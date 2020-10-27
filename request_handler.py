@@ -1,5 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from subscriptions.request import edit_subscription
 from tagPosts import create_tagPost, get_tagPosts
 from posts import create_post, get_all_posts, delete_post, get_posts_by_category_id, get_single_post, get_posts_by_user_id
 from categories import get_categories, create_category
@@ -150,7 +151,20 @@ class HandleRequests(BaseHTTPRequestHandler):
 
 
         # Encode the new animal and send in response
-        self.wfile.write("".encode())    
+        self.wfile.write("".encode()) 
+
+
+    def do_PATCH(self):
+        self._set_headers(204)
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+        (resource, id) = self.parse_url(self.path)
+
+        if resource == "subscriptions":
+            edit_subscription(id, post_body)
+
+        self.wfile.write("".encode())   
 
 def main():
     host = ''
