@@ -42,12 +42,32 @@ def create_subscription(new_subscription):
         VALUES
             ( ?, ?, ?, ?);
         """, (new_subscription['user_id'], new_subscription['subscribe_id'],
-                new_subscription['begin'], new_subscription['end'],
-               ))
+              new_subscription['begin'], new_subscription['end'],
+              ))
 
         id = db_cursor.lastrowid
 
         new_subscription['id'] = id
 
-
     return json.dumps(new_subscription)
+
+
+def edit_subscription(id, new_sub):
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE Subscription
+            SET
+                end = ?          
+        WHERE id = ?
+        """, (new_sub['end'], id))
+
+        rows_affected = db_cursor.rowcount
+
+        if rows_affected == 0:
+            # Forces 404 response by main module
+            return False
+        else:
+            # Forces 204 response by main module
+            return True
