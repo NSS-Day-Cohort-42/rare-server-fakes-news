@@ -1,7 +1,7 @@
 from models.category import Category
 import sqlite3
 import json
-from models import Post, User
+from models import Post, User, Tag
 
 def get_all_posts():
     with sqlite3.connect("./rare.db") as conn:
@@ -66,10 +66,15 @@ def get_single_post(id):
             p.date,
             p.user_id,
             p.approved,
-            u.display_name
+            c.type,
+            u.display_name,
+            t.tag
         FROM post p
-        JOIN User u ON u.id = p.user_id
-        WHERE p.id = ?
+        JOIN Category c ON c.id = p.category_id
+        JOIN User u ON u.id = p.user_id 
+        JOIN TagPost tp on tp.post_id = p.id   
+        JOIN Tag t on t.id = tp.tag_id      
+        WHERE p.id = ?;
             """, ( id, ))
 
         # Load the single result into memory
@@ -77,16 +82,14 @@ def get_single_post(id):
 
         # Create an post instance from the current row
         post = Post(data['id'], data['title'], data['content'], data['category_id'], data['date'], data['user_id'], data['approved'])
-       
+        category = Category("", data['type'])
         user = User("", "", "", "", data['display_name'], "", "", "", "")
+        tag = Tag("", data['tag'])
+        
 
         post.user = user.__dict__
-        # add joins later
-        # location = Location("", "", data['location_name'])
-        # animal.location = location.__dict__
-
-        # customer = Customer("", "", data['customer_name'], "", "")
-        # animal.customer = customer.__dict__
+        post.category = category.__dict__
+        post.tag = tag.__dict__
 
         return json.dumps(post.__dict__)
 
@@ -108,8 +111,8 @@ def get_posts_by_user_id(user_id):
             u.display_name
         FROM post p
         JOIN Category c ON c.id = p.category_id
-        JOIN User u ON u.id = p.user_id          
-        WHERE p.user_id = ?
+        JOIN User u ON u.id = p.user_id       
+        WHERE p.user_id = ?;
 
         """, ( user_id, ))
 
@@ -125,8 +128,7 @@ def get_posts_by_user_id(user_id):
             category = Category("", row['type'])
 
             post.user = user.__dict__
-            post.category = category.__dict__
-            
+            post.category = category.__dict__            
             posts.append(post.__dict__)
             
 
