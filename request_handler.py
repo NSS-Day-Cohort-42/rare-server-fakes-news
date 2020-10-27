@@ -1,7 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from tagPosts import create_tagPost, get_tagPosts
-from posts import create_post, get_all_posts, delete_post, get_posts_by_category_id, get_single_post, get_posts_by_user_id
+from posts import create_post, get_all_posts, delete_post, get_posts_by_category_id, get_single_post, get_posts_by_user_id, edit_post
 from categories import get_categories, create_category
 from reactions import get_reactions, get_reactions_by_post_id, create_reaction
 from subscriptions import get_subscriptions, create_subscription, edit_subscription
@@ -146,7 +146,6 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_resource = create_reaction(post_body)
         if resource == "subscriptions":
             new_resource = create_subscription(post_body)
-
         if resource == "reactionPosts":
             new_resource = create_reactionPost(post_body)
 
@@ -179,6 +178,19 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "subscriptions":
             edit_subscription(id, post_body)
+
+        self.wfile.write("".encode()) 
+
+
+    def do_PUT(self):
+        self._set_headers(204)
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+        (resource, id) = self.parse_url(self.path)
+
+        if resource == "posts":
+            edit_post(id, post_body)
 
         self.wfile.write("".encode())   
 
