@@ -95,7 +95,12 @@ def get_posts_by_user_id(user_id):
             p.category_id,
             p.date,
             p.user_id,
-            p.approved
+            p.approved,
+            c.type,
+            u.display_name
+        FROM post p
+        JOIN Category c ON c.id = p.category_id
+        JOIN User u ON u.id = p.user_id          
         WHERE p.user_id = ?
 
         """, ( user_id, ))
@@ -108,6 +113,12 @@ def get_posts_by_user_id(user_id):
 
             # Create an post instance from the current row
             post = Post(row['id'], row['title'], row['content'], row['category_id'], row['date'], row['user_id'], row['approved'])
+            user = User("", "", "", "", row['display_name'], "", "", "", "")
+            category = Category("", row['type'])
+
+            post.user = user.__dict__
+            post.category = category.__dict__
+            
             posts.append(post.__dict__)
             
 
