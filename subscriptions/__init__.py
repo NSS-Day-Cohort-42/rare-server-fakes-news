@@ -1,1 +1,1 @@
-from .request import get_subscriptions, create_subscription
+from .request import get_subscriptions, create_subscription, edit_subscription
