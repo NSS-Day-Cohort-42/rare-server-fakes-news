@@ -55,8 +55,6 @@ def get_single_post(id):
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
-        # Use a ? parameter to inject a variable's value
-        # into the SQL statement.
         db_cursor.execute("""
         SELECT
             p.id,
@@ -66,7 +64,8 @@ def get_single_post(id):
             p.date,
             p.user_id,
             p.approved,
-            u.display_name
+            u.display_name,
+            u.id user_obj_id
         FROM post p
         JOIN User u ON u.id = p.user_id
         WHERE p.id = ?
@@ -78,15 +77,9 @@ def get_single_post(id):
         # Create an post instance from the current row
         post = Post(data['id'], data['title'], data['content'], data['category_id'], data['date'], data['user_id'], data['approved'])
        
-        user = User("", "", "", "", data['display_name'], "", "", "", "")
+        user = User(data['user_obj_id'], "", "", "", data['display_name'], "", "", "", "")
 
         post.user = user.__dict__
-        # add joins later
-        # location = Location("", "", data['location_name'])
-        # animal.location = location.__dict__
-
-        # customer = Customer("", "", data['customer_name'], "", "")
-        # animal.customer = customer.__dict__
 
         return json.dumps(post.__dict__)
 
