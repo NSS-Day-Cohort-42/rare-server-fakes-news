@@ -6,6 +6,11 @@ from categories import get_categories, create_category
 from reactions import get_reactions, get_reactions_by_post_id, create_reaction
 from subscriptions import get_subscriptions, create_subscription
 from tags import get_tags, create_tag
+from models import Category, Post, Reaction, Tag, User, TagPost, ReactionPost, Subscription
+from users import get_user_by_email, create_user, get_all_users
+from categories import get_categories
+from tags import get_tags, create_tag
+from reactionPosts import create_reactionPost, get_reactionPosts
 from users import get_user_by_email, create_user, get_all_users, get_single_user
 
 
@@ -88,6 +93,12 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_post(id)
                 else:
                     response = get_all_posts()
+
+            if resource == "tagPosts" and id is None:
+                response = get_tagPosts()
+
+            if resource == "reactionPosts" and id is None:
+                response = get_reactionPosts()
             if resource == "users":
                 if id is not None:
                     response = get_single_user(id)
@@ -133,6 +144,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_resource = create_tagPost(post_body)
         if resource == "reactions":
             new_resource = create_reaction(post_body)
+
+        if resource == "reactionPosts":
+            new_resource = create_reactionPost(post_body)
+
 
         # Encode the new animal and send in response
         self.wfile.write(f"{new_resource}".encode())
