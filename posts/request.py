@@ -64,7 +64,8 @@ def get_single_post(id):
             p.date,
             p.user_id,
             p.approved,
-            u.display_name
+            u.display_name,
+            u.id user_obj_id
         FROM post p
         JOIN User u ON u.id = p.user_id
         WHERE p.id = ?
@@ -76,7 +77,7 @@ def get_single_post(id):
         # Create an post instance from the current row
         post = Post(data['id'], data['title'], data['content'], data['category_id'], data['date'], data['user_id'], data['approved'])
        
-        user = User(data['id'], "", "", "", data['display_name'], "", "", "", "")
+        user = User(data['user_obj_id'], "", "", "", data['display_name'], "", "", "", "")
 
         post.user = user.__dict__
 
