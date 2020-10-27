@@ -47,21 +47,19 @@ def get_tagPosts_by_tag_id(tag_id):
            tp.id,
            tp.tag_id,
            tp.post_id
-           p.title 
-           p.content 
-        
-        WHERE tp.id = ?
-        """, ( id, ))
+        FROM tagPost tp 
+        WHERE tp.tag_id = ?
+        """, ( tag_id, ))
 
-        tagPostsByTagId = []
+        tagPosts = []
 
         dataset = db_cursor.fetchall()
 
         for row in dataset:
-            tagPost = TagPost(row['id'], row['tag_id'], row['post_id'], row['title'], row['content'])
-            tagPostsByTagId.append(tagPost.__dict__)
+            tagPost = TagPost(row['id'], row['tag_id'], row['post_id'])
+            tagPosts.append(tagPost.__dict__)
 
-    return json.dumps(tagPostsByTagId)
+    return json.dumps(tagPosts)
 
 
 def create_tagPost(new_tagPost):
