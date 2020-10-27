@@ -1,11 +1,10 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from subscriptions.request import edit_subscription
 from tagPosts import create_tagPost, get_tagPosts
 from posts import create_post, get_all_posts, delete_post, get_posts_by_category_id, get_single_post, get_posts_by_user_id
 from categories import get_categories, create_category
 from reactions import get_reactions, get_reactions_by_post_id, create_reaction
-from subscriptions import get_subscriptions, create_subscription
+from subscriptions import get_subscriptions, create_subscription, edit_subscription
 from tags import get_tags, create_tag
 from users import get_user_by_email, create_user, get_all_users, get_single_user
 
@@ -134,6 +133,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_resource = create_tagPost(post_body)
         if resource == "reactions":
             new_resource = create_reaction(post_body)
+        if resource == "subscriptions":
+            new_resource = create_subscription(post_body)
 
         # Encode the new animal and send in response
         self.wfile.write(f"{new_resource}".encode())
