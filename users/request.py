@@ -44,6 +44,35 @@ def get_all_users():
     # Use `json` package to properly serialize list as JSON
     return json.dumps(users)
 
+def get_single_user(id):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            u.id,
+            u.first_name, 
+            u.last_name,
+            u.display_name,
+            u.email,
+            u.password,
+            u.avatar,
+            u.creation,
+            u.active
+        FROM User u
+        WHERE u.id = ?
+            """, ( id, ))
+
+        data = db_cursor.fetchone()
+       
+        user = User(data['id'], data['avatar'], data['first_name'], 
+                    data['last_name'], data['display_name'], 
+                    data['password'], data['email'], data['creation'], 
+                    data['active'])
+
+        return json.dumps(user.__dict__)
+
 
 def get_user_by_email(email):
 
