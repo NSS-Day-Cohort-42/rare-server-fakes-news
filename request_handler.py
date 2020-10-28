@@ -160,7 +160,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         (resource, id) = self.parse_url(self.path)
 
         # Delete a single post or tagPost from the list
-        if resource == "Posts":
+        if resource == "posts":
             delete_post(id)
         if resource == "TagPosts":
             delete_tag_post(id)
