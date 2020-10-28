@@ -135,15 +135,22 @@ def get_posts_by_tag_id(tag_id):
         SELECT
             p.id,
             p.title,
+            p.content,
+            p.category_id,
+            p.date,
+            p.user_id,
+            p.approved,
             t.tag,
             c.type,
             u.display_name,
-        FROM post p
+        FROM Post p
+        JOIN TagPost tp ON tp.post_id = p.id
+        JOIN Tag t ON t.id = tp.tag_id
         JOIN Category c ON c.id = p.category_id
         JOIN User u ON u.id = p.user_id          
-        WHERE p.user_id = ?
+        WHERE p.tag_id = ?
 
-        """, ( user_id, ))
+        """, ( tag_id, ))
 
         posts = []
 
@@ -151,18 +158,20 @@ def get_posts_by_tag_id(tag_id):
 
         for row in dataset:
 
-            # Create an post instance from the current row
             post = Post(row['id'], row['title'], row['content'], row['category_id'], row['date'], row['user_id'], row['approved'])
-            user = User("", "", "", "", row['display_name'], "", "", "", "")
+            tagPost = TagPost("", "", "")
+            tag = Tag("", row['tag'])
             category = Category("", row['type'])
+            user = User("", "", "", "", row['display_name'], "", "", "", "")
 
-            post.user = user.__dict__
+            post.tagPost = tagPost.__dict__
+            post.tag = tag.__dict__
             post.category = category.__dict__
+            post.user = user.__dict__
             
             posts.append(post.__dict__)
             
 
-        # Return the JSON serialized Customer object
         return json.dumps(posts)
 
 def get_posts_by_category_id(category_id):
