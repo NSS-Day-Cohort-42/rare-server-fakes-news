@@ -29,7 +29,7 @@ def get_categories():
             # Create a category instance from the current row.
             # Note that the database fields are specified in
             # exact order of the parameters defined in the
-            # Post class above.
+            # category class above.
             category = Category(row['id'], row['type'])
             categories.append(category.__dict__)
 

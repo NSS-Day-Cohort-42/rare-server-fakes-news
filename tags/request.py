@@ -29,7 +29,7 @@ def get_tags():
             # Create a tag instance from the current row.
             # Note that the database fields are specified in
             # exact order of the parameters defined in the
-            # Post class above.
+            # Tag class above.
             tag = Tag(row['id'], row['tag'])
             tags.append(tag.__dict__)
 

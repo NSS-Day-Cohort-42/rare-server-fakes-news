@@ -30,7 +30,7 @@ def get_tagPosts():
             # Create a tagPost instance from the current row.
             # Note that the database fields are specified in
             # exact order of the parameters defined in the
-            # Post class above.
+            # tagPost class above.
             tagPost = TagPost(row['id'], row['tag_id'], row['post_id'])
             tagPosts.append(tagPost.__dict__)
 
