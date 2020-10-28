@@ -6,3 +6,4 @@ from .request import create_post
 from .request import delete_post 
 from .request import get_posts_by_category_id 
 from .request import edit_post
+from .request import get_single_post_tags
