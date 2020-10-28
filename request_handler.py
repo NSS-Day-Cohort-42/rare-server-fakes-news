@@ -154,7 +154,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_resource = create_reactionPost(post_body)
 
 
-        # Encode the new animal and send in response
+        # Encode the new object and send in response
         self.wfile.write(f"{new_resource}".encode())
 
     def do_DELETE(self):
@@ -164,14 +164,14 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
-        # Delete a single animal from the list
+        # Delete a single post or tagPost from the list
         if resource == "Posts":
             delete_post(id)
         if resource == "TagPosts":
             delete_tag_post(id)
 
 
-        # Encode the new animal and send in response
+        # Encode the new object and send in response
         self.wfile.write("".encode()) 
 
 
