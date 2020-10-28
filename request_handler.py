@@ -1,7 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from tagPosts import create_tagPost, get_tagPosts, get_posts_by_tag_id
-from posts import create_post, get_all_posts, delete_post, get_posts_by_category_id, get_single_post, get_posts_by_user_id, edit_post
+from tagPosts import create_tagPost, get_tagPosts
+from posts import create_post, get_all_posts, delete_post, get_posts_by_category_id, get_single_post, get_posts_by_user_id, edit_post, get_posts_by_tag_id
 from categories import get_categories, create_category
 from reactions import get_reactions, get_reactions_by_post_id, create_reaction
 from subscriptions import get_subscriptions, create_subscription, edit_subscription

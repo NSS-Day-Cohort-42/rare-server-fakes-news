@@ -37,49 +37,6 @@ def get_tagPosts():
     # Use `json` package to properly serialize list as JSON
     return json.dumps(tagPosts)
 
-def get_tagPosts_by_tag_id(tag_id):
-    with sqlite3.connect("./rare.db") as conn:
-        conn.row_factory = sqlite3.Row
-        db_cursor = conn.cursor()
-
-        db_cursor.execute("""
-        SELECT
-           tp.id,
-           tp.tag_id,
-           tp.post_id,
-           t.tag,
-           p.title, 
-           u.display_name, 
-           c.type
-        FROM TagPost tp 
-        JOIN Tag t ON t.id = tp.tag_id
-        JOIN Post p ON p.id = tp.post_id
-        JOIN User u ON u.id = p.user_id
-        JOIN Category c ON c.id = p.category_id
-        WHERE tp.tag_id = ?
-        """, ( tag_id, ))
-
-        tagPosts = []
-
-        dataset = db_cursor.fetchall()
-
-        for row in dataset:
-
-            tagPost = TagPost(row['id'], row['tag_id'], row['post_id'])
-
-            tag = Tag("", row['tag'])
-            post = Post("", row['title'], "", "", "", "", "")
-            user = User("", "", "", "", row['display_name'], "", "", "", "")
-            category = Category("", row['type'])
-
-            tagPost.tag = tag.__dict__
-            tagPost.post = post.__dict__
-            tagPost.user = user.__dict__
-            tagPost.category = category.__dict__
-            tagPosts.append(tagPost.__dict__)
-
-
-    return json.dumps(tagPosts)
 
 
 def create_tagPost(new_tagPost):

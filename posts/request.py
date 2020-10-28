@@ -1,7 +1,7 @@
 from models.category import Category
 import sqlite3
 import json
-from models import Post, User
+from models import Post, User, TagPost, Tag, Category
 
 def get_all_posts():
     with sqlite3.connect("./rare.db") as conn:
@@ -140,15 +140,16 @@ def get_posts_by_tag_id(tag_id):
             p.date,
             p.user_id,
             p.approved,
+            t.id as tag_id,
             t.tag,
             c.type,
-            u.display_name,
+            u.display_name
         FROM Post p
-        JOIN TagPost tp ON tp.post_id = p.id
-        JOIN Tag t ON t.id = tp.tag_id
+        JOIN TagPost tp ON p.id = tp.post_id
+        JOIN Tag t ON tp.tag_id = t.id
         JOIN Category c ON c.id = p.category_id
         JOIN User u ON u.id = p.user_id          
-        WHERE p.tag_id = ?
+        WHERE t.id = ?
 
         """, ( tag_id, ))
 
@@ -159,8 +160,8 @@ def get_posts_by_tag_id(tag_id):
         for row in dataset:
 
             post = Post(row['id'], row['title'], row['content'], row['category_id'], row['date'], row['user_id'], row['approved'])
-            tagPost = TagPost("", "", "")
-            tag = Tag("", row['tag'])
+            tagPost = TagPost("", row['tag_id'], "")
+            tag = Tag(row['tag_id'], row['tag'])
             category = Category("", row['type'])
             user = User("", "", "", "", row['display_name'], "", "", "", "")
 
