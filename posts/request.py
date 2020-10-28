@@ -164,8 +164,6 @@ def get_posts_by_user_id(user_id):
         # Return the JSON serialized Customer object
         return json.dumps(posts)
 
-# # get_posts_by_tag_id
-
 def get_posts_by_category_id(category_id):
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
@@ -210,8 +208,6 @@ def get_posts_by_category_id(category_id):
         # Return the JSON serialized Customer object
         return json.dumps(posts)
 
-# # get_posts_by_subscription
-
 def create_post(new_post):
     with sqlite3.connect("./rare.db") as conn:
         db_cursor = conn.cursor()
@@ -241,32 +237,30 @@ def delete_post(id):
         WHERE id = ?
         """, (id, ))
 
-# def edit_post(id, new_post):
-#     with sqlite3.connect("./rare.db") as conn:
-#         db_cursor = conn.cursor()
+def edit_post(id, new_post):
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
 
-#         db_cursor.execute("""
-#         UPDATE Post
-#             SET
-    # #           p.id,
-    #             p.title,
-    #             p.content,
-    #             p.category_id,
-    #             p.datetime,
-    #             p.user_id,
-    #             p.approved            
-#         WHERE id = ?
-#         """, (new_post['title'], new_post['content'],
-            #   new_post['category_id'], new_post['datetime'], new_post['user_id'], new_post['approved']))
+        db_cursor.execute("""
+        UPDATE Post
+            SET
+                title = ?,
+                content = ?,
+                category_id = ?,
+                date = ?,
+                user_id = ?,
+                approved = ?           
+        WHERE id = ?
+        """, (new_post['title'], new_post['content'],
+              new_post['category_id'], new_post['date'], 
+              new_post['user_id'], new_post['approved'], id ))
 
-#         # Were any rows affected?
-#         # Did the client send an `id` that exists?
-#         rows_affected = db_cursor.rowcount
+        rows_affected = db_cursor.rowcount
 
-#     if rows_affected == 0:
-#         # Forces 404 response by main module
-#         return False
-#     else:
-#         # Forces 204 response by main module
-#         return True
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        return False
+    else:
+        # Forces 204 response by main module
+        return True
 
