@@ -92,7 +92,6 @@ def get_single_post_tags(id):
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
-        
 
         # Use a ? parameter to inject a variable's value
         # into the SQL statement.
@@ -100,7 +99,7 @@ def get_single_post_tags(id):
         SELECT
             t.id,
             t.tag,
-            tp.id
+            tp.id tagPostId
         FROM TagPost tp
         JOIN Tag t on t.id = tp.tag_id 
         JOIN post p on p.id = tp.post_id
@@ -116,7 +115,7 @@ def get_single_post_tags(id):
         for row in dataset:
             # Create an post instance from the current row
             tag = Tag(row['id'], row['tag'])
-            tagPost = TagPost(row['id'], "", "")
+            tagPost = TagPost(row['tagPostId'], "", "")
             tag.tagPost = tagPost.__dict__
             
             tags.append(tag.__dict__)
