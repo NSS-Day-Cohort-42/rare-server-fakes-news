@@ -2,7 +2,7 @@ from sqlite3.dbapi2 import Row
 from models.category import Category
 import sqlite3
 import json
-from models import Post, User, Tag, TagPost
+from models import Post, User, TagPost, Tag, Category
 
 def get_all_posts():
     with sqlite3.connect("./rare.db") as conn:
@@ -162,6 +162,55 @@ def get_posts_by_user_id(user_id):
             
 
         # Return the JSON serialized Customer object
+        return json.dumps(posts)
+
+def get_posts_by_tag_id(tag_id):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            p.id,
+            p.title,
+            p.content,
+            p.category_id,
+            p.date,
+            p.user_id,
+            p.approved,
+            t.id as tag_id,
+            t.tag,
+            c.type,
+            u.display_name
+        FROM Post p
+        JOIN TagPost tp ON p.id = tp.post_id
+        JOIN Tag t ON tp.tag_id = t.id
+        JOIN Category c ON c.id = p.category_id
+        JOIN User u ON u.id = p.user_id          
+        WHERE t.id = ?
+
+        """, ( tag_id, ))
+
+        posts = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+
+            post = Post(row['id'], row['title'], row['content'], row['category_id'], row['date'], row['user_id'], row['approved'])
+            tagPost = TagPost("", row['tag_id'], "")
+            tag = Tag(row['tag_id'], row['tag'])
+            category = Category("", row['type'])
+            user = User("", "", "", "", row['display_name'], "", "", "", "")
+
+            post.tagPost = tagPost.__dict__
+            post.tag = tag.__dict__
+            post.category = category.__dict__
+            post.user = user.__dict__
+            
+            posts.append(post.__dict__)
+            
+
         return json.dumps(posts)
 
 def get_posts_by_category_id(category_id):
