@@ -30,7 +30,7 @@ def get_reactions():
             # Create a reaction instance from the current row.
             # Note that the database fields are specified in
             # exact order of the parameters defined in the
-            # Post class above.
+            # reaction class above.
             reaction = Reaction(row['id'], row['reaction'], row['reaction_description'])
             reactions.append(reaction.__dict__)
 
@@ -59,11 +59,11 @@ def get_reactions_by_post_id(post_id):
 
         for row in dataset:
 
-            # Create an customer instance from the current row
+            # Create a reaction instance from the current row
             reaction = Reaction(row['id'], row['reaction'], row['reaction_description'])
             reactions.append(reaction.__dict__)
 
-        # Return the JSON serialized Customer object
+        # Return the JSON serialized reaction object
         return json.dumps(reactions)
 
 def create_reaction(new_reaction):

@@ -161,7 +161,7 @@ def get_posts_by_user_id(user_id):
             posts.append(post.__dict__)
             
 
-        # Return the JSON serialized Customer object
+        # Return the JSON serialized post object
         return json.dumps(posts)
 
 def get_posts_by_tag_id(tag_id):
@@ -254,7 +254,7 @@ def get_posts_by_category_id(category_id):
             posts.append(post.__dict__)
             
 
-        # Return the JSON serialized Customer object
+        # Return the JSON serialized post object
         return json.dumps(posts)
 
 def create_post(new_post):

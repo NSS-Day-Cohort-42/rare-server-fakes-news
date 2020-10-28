@@ -36,7 +36,7 @@ def get_all_users():
             # Create a user instance from the current row.
             # Note that the database fields are specified in
             # exact order of the parameters defined in the
-            # Post class above.
+            # User class above.
             user = User(row['id'], row['avatar'], row['first_name'], row['last_name'], row['display_name'], 
                         row['password'], row['email'], row['creation'], row['active'])
             users.append(user.__dict__)

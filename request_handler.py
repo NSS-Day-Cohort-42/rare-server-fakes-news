@@ -14,9 +14,6 @@ from reactionPosts import create_reactionPost, get_reactionPosts
 from users import get_user_by_email, create_user, get_all_users, get_single_user
 
 
-
-
-
 # This function is not inside the class. It is the starting
 # point of this application.
 
@@ -32,12 +29,11 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             param = resource.split("?")[1]  # email=jenna@solis.com
             resource = resource.split("?")[0]  # 'customers'
-            pair = param.split("=")  # [ 'email', 'jenna@solis.com' ] 
-            key = pair[0]  # 'email' 
+            pair = param.split("=")  # [ 'email', 'jenna@solis.com' ]
+            key = pair[0]  # 'email'
             value = pair[1]  # 'jenna@solis.com'
 
-
-            return ( resource, key, value )
+            return (resource, key, value)
 
         # No query string parameter
         else:
@@ -67,7 +63,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Headers',
                          'X-Requested-With, Content-Type, Accept')
         self.end_headers()
-    
+
     def do_GET(self):
         self._set_headers(200)
         response = {}
@@ -76,11 +72,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         parsed = self.parse_url(self.path)
 
         if len(parsed) == 2:
-            ( resource, id ) = parsed
+            (resource, id) = parsed
 
             if resource == "categories" and id is None:
                 response = get_categories()
-            if resource == "tags":            
+            if resource == "tags":
                 response = get_tags()
             if resource == "reactions":
                 response = get_reactions()
@@ -104,17 +100,16 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_user(id)
                 else:
                     response = get_all_users()
-     
-        
+
         elif len(parsed) == 3:
-            ( resource, key, value ) = parsed
+            (resource, key, value) = parsed
 
             if key == "email" and resource == "users":
                 response = get_user_by_email(value)
-        
+
             if key == "category_id" and resource == "posts":
                 response = get_posts_by_category_id(value)
-        
+
             if key == "user_id" and resource == "posts":
                 response = get_posts_by_user_id(value)
         
@@ -122,9 +117,9 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_posts_by_tag_id(value)
             if key == "post_id" and resource == "tags":
                 response = get_single_post_tags(value)
-        
+
         self.wfile.write(response.encode())
-    
+
     def do_POST(self):
         self._set_headers(201)
         content_len = int(self.headers.get('content-length', 0))
@@ -154,7 +149,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "reactionPosts":
             new_resource = create_reactionPost(post_body)
 
-
         # Encode the new object and send in response
         self.wfile.write(f"{new_resource}".encode())
 
@@ -171,10 +165,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "TagPosts":
             delete_tag_post(id)
 
-
         # Encode the new object and send in response
-        self.wfile.write("".encode()) 
-
+        self.wfile.write("".encode())
 
     def do_PATCH(self):
         self._set_headers(204)
@@ -186,8 +178,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "subscriptions":
             edit_subscription(id, post_body)
 
-        self.wfile.write("".encode()) 
-
+        self.wfile.write("".encode())
 
     def do_PUT(self):
         self._set_headers(204)
@@ -199,7 +190,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "posts":
             edit_post(id, post_body)
 
-        self.wfile.write("".encode())   
+        self.wfile.write("".encode())
+
 
 def main():
     host = ''
@@ -209,4 +201,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
