@@ -126,6 +126,45 @@ def get_posts_by_user_id(user_id):
         # Return the JSON serialized Customer object
         return json.dumps(posts)
 
+def get_posts_by_tag_id(tag_id):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            p.id,
+            p.title,
+            t.tag,
+            c.type,
+            u.display_name,
+        FROM post p
+        JOIN Category c ON c.id = p.category_id
+        JOIN User u ON u.id = p.user_id          
+        WHERE p.user_id = ?
+
+        """, ( user_id, ))
+
+        posts = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+
+            # Create an post instance from the current row
+            post = Post(row['id'], row['title'], row['content'], row['category_id'], row['date'], row['user_id'], row['approved'])
+            user = User("", "", "", "", row['display_name'], "", "", "", "")
+            category = Category("", row['type'])
+
+            post.user = user.__dict__
+            post.category = category.__dict__
+            
+            posts.append(post.__dict__)
+            
+
+        # Return the JSON serialized Customer object
+        return json.dumps(posts)
+
 def get_posts_by_category_id(category_id):
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row

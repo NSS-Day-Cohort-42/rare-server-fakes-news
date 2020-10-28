@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from models import TagPost, Post, User, Category, Tag
+from models import TagPost, Post
 
 
 def get_tagPosts():
@@ -52,10 +52,6 @@ def get_tagPosts_by_tag_id(tag_id):
            u.display_name, 
            c.type
         FROM TagPost tp 
-        JOIN Tag t ON t.id = tp.tag_id
-        JOIN Post p ON p.id = tp.post_id
-        JOIN User u ON u.id = p.user_id
-        JOIN Category c ON c.id = p.category_id
         WHERE tp.tag_id = ?
         """, ( tag_id, ))
 
@@ -67,15 +63,6 @@ def get_tagPosts_by_tag_id(tag_id):
 
             tagPost = TagPost(row['id'], row['tag_id'], row['post_id'])
 
-            tag = Tag("", row['tag'])
-            post = Post("", row['title'], "", "", "", "", "")
-            user = User("", "", "", "", row['display_name'], "", "", "", "")
-            category = Category("", row['type'])
-
-            tagPost.tag = tag.__dict__
-            tagPost.post = post.__dict__
-            tagPost.user = user.__dict__
-            tagPost.category = category.__dict__
             tagPosts.append(tagPost.__dict__)
 
 
