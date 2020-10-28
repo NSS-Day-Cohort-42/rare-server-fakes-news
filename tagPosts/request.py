@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from models import TagPost
+from models import TagPost, Post, User, Category, Tag
 
 
 def get_tagPosts():
@@ -36,6 +36,7 @@ def get_tagPosts():
 
     # Use `json` package to properly serialize list as JSON
     return json.dumps(tagPosts)
+
 
 
 def create_tagPost(new_tagPost):
