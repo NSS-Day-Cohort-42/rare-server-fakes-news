@@ -1,1 +1,1 @@
-from .request import create_tagPost, get_tagPosts
+from .request import create_tagPost, get_tagPosts, delete_tag_post

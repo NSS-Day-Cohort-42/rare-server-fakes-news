@@ -1,7 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from tagPosts import create_tagPost, get_tagPosts
-from posts import create_post, get_all_posts, delete_post, get_posts_by_category_id, get_single_post, get_posts_by_user_id, edit_post, get_posts_by_tag_id
+from tagPosts import create_tagPost, get_tagPosts, delete_tag_post
+from posts import create_post, get_all_posts, delete_post, get_posts_by_category_id, get_posts_by_user_id, get_single_post_tags, get_single_post, edit_post, get_posts_by_tag_id
 from categories import get_categories, create_category
 from reactions import get_reactions, get_reactions_by_post_id, create_reaction
 from subscriptions import get_subscriptions, create_subscription, edit_subscription
@@ -120,6 +120,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         
             if key == "tag_id" and resource == "posts":
                 response = get_posts_by_tag_id(value)
+            if key == "post_id" and resource == "tags":
+                response = get_single_post_tags(value)
         
         self.wfile.write(response.encode())
     
@@ -153,7 +155,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_resource = create_reactionPost(post_body)
 
 
-        # Encode the new animal and send in response
+        # Encode the new object and send in response
         self.wfile.write(f"{new_resource}".encode())
 
     def do_DELETE(self):
@@ -163,12 +165,14 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
-        # Delete a single animal from the list
+        # Delete a single post or tagPost from the list
         if resource == "Posts":
             delete_post(id)
+        if resource == "TagPosts":
+            delete_tag_post(id)
 
 
-        # Encode the new animal and send in response
+        # Encode the new object and send in response
         self.wfile.write("".encode()) 
 
 
