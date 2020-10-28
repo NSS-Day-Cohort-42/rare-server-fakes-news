@@ -1,7 +1,8 @@
+from sqlite3.dbapi2 import Row
 from models.category import Category
 import sqlite3
 import json
-from models import Post, User
+from models import Post, User, Tag, TagPost
 
 def get_all_posts():
     with sqlite3.connect("./rare.db") as conn:
@@ -64,11 +65,13 @@ def get_single_post(id):
             p.date,
             p.user_id,
             p.approved,
+            c.type,
             u.display_name,
             u.id user_obj_id
         FROM post p
-        JOIN User u ON u.id = p.user_id
-        WHERE p.id = ?
+        JOIN Category c ON c.id = p.category_id
+        JOIN User u ON u.id = p.user_id 
+        WHERE p.id = ?;
             """, ( id, ))
 
         # Load the single result into memory
@@ -76,12 +79,48 @@ def get_single_post(id):
 
         # Create an post instance from the current row
         post = Post(data['id'], data['title'], data['content'], data['category_id'], data['date'], data['user_id'], data['approved'])
-       
-        user = User(data['user_obj_id'], "", "", "", data['display_name'], "", "", "", "")
-
+        category = Category("", data['type'])
+        user = User("", "", "", "", data['display_name'], "", "", "", "")
+        
+        post.user = user.__dict__
+        post.category = category.__dict__
         post.user = user.__dict__
 
         return json.dumps(post.__dict__)
+
+def get_single_post_tags(id):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Use a ? parameter to inject a variable's value
+        # into the SQL statement.
+        db_cursor.execute("""
+        SELECT
+            t.id,
+            t.tag,
+            tp.id tagPostId
+        FROM TagPost tp
+        JOIN Tag t on t.id = tp.tag_id 
+        JOIN post p on p.id = tp.post_id
+        WHERE p.id = ?;
+            """, ( id, ))
+
+        # Initialize an empty list to hold all post representations
+        tags = []
+
+        # Load the single result into memory
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            # Create an post instance from the current row
+            tag = Tag(row['id'], row['tag'])
+            tagPost = TagPost(row['tagPostId'], "", "")
+            tag.tagPost = tagPost.__dict__
+            
+            tags.append(tag.__dict__)
+
+        return json.dumps(tags)
 
 def get_posts_by_user_id(user_id):
     with sqlite3.connect("./rare.db") as conn:
@@ -101,8 +140,8 @@ def get_posts_by_user_id(user_id):
             u.display_name
         FROM post p
         JOIN Category c ON c.id = p.category_id
-        JOIN User u ON u.id = p.user_id          
-        WHERE p.user_id = ?
+        JOIN User u ON u.id = p.user_id       
+        WHERE p.user_id = ?;
 
         """, ( user_id, ))
 
@@ -118,8 +157,7 @@ def get_posts_by_user_id(user_id):
             category = Category("", row['type'])
 
             post.user = user.__dict__
-            post.category = category.__dict__
-            
+            post.category = category.__dict__            
             posts.append(post.__dict__)
             
 
